@@ -1,4 +1,7 @@
 from pydantic import BaseSettings
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 
 class Settings(BaseSettings):
@@ -9,7 +12,7 @@ class Settings(BaseSettings):
     pusher_cluster: str
 
     class Config:
-        env_file = ".env"
+        env_file = BASE_DIR / ".env"
 
 
 settings = Settings()

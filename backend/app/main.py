@@ -1,13 +1,12 @@
-import config
 import pusher
 
 from functools import lru_cache
 from fastapi import Depends, FastAPI
 
+from config import settings
+
 
 app = FastAPI()
-
-settings = config.Settings()
 
 pusher_client = pusher.Pusher(
     app_id=settings.pusher_app_id,
