@@ -1,3 +1,4 @@
+import hashlib
 import pusher
 
 import models
@@ -6,7 +7,8 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from pydantic import BaseSettings
-from fastapi import FastAPI
+from fastapi import Request, APIRouter, FastAPI
+from fastapi.routing import APIRoute
 
 # settings
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -51,11 +53,29 @@ pusher_client = pusher.Pusher(
     ssl=True,
 )
 
+# router
+class ContextIncludedRoute(APIRoute):
+    def get_route_handler(self):
+        original_route_handler = super().get_route_handler()
+
+        async def custom_route_handler(request: Request):
+            client_string = request.client.host + request.headers.get("user-agent", default="")
+            client_hash_header = "x-client-hash".encode(), hashlib.md5(client_string.encode()).digest()
+            request.headers.__dict__["_list"].append(client_hash_header)
+            response = await original_route_handler(request)
+            return response
+
+        return custom_route_handler
+
+
+router = APIRouter(route_class=ContextIncludedRoute)
+
+@router.get("/")
+def index(request: Request):
+    client_hash = request.headers.get("x-client-hash")
+    # pusher_client.trigger("my-channel", "my-event", "Pizza Rank")
+    return {"client_hash": client_hash}
+
 # fastapi
 app = FastAPI()
-
-
-@app.get("/")
-def index():
-    pusher_client.trigger("my-channel", "my-event", "Pizza Rank")
-    return "Success"
+app.include_router(router)
