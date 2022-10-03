@@ -1,7 +1,11 @@
 import pusher
 
-from pydantic import BaseSettings
+import models
+
 from pathlib import Path
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from pydantic import BaseSettings
 from fastapi import FastAPI
 
 # settings
@@ -21,6 +25,22 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# database
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+models.Base.metadata.create_all(bind=engine)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 # pusher
 pusher_client = pusher.Pusher(
