@@ -1,13 +1,15 @@
 import hashlib
 import pusher
 
-import models
+import utils, models, schemas
 
+from datetime import datetime
 from pathlib import Path
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.exc import IntegrityError
 from pydantic import BaseSettings
-from fastapi import Request, APIRouter, FastAPI
+from fastapi import Depends, Request, HTTPException, APIRouter, FastAPI
 from fastapi.routing import APIRoute
 
 # settings
@@ -70,11 +72,23 @@ class ContextIncludedRoute(APIRoute):
 
 router = APIRouter(route_class=ContextIncludedRoute)
 
-@router.get("/")
-def index(request: Request):
+
+@router.get("/votes", response_model=list[schemas.AggregateVotes])
+def get_votes(db: Session = Depends(get_db)):
+    return utils.get_votes(db)
+
+
+@router.post("/votes", response_model=schemas.Vote)
+def post_vote(request: Request, vote: schemas.VoteCreate, db: Session = Depends(get_db)):
     client_hash = request.headers.get("x-client-hash")
-    # pusher_client.trigger("my-channel", "my-event", "Pizza Rank")
-    return {"client_hash": client_hash}
+
+    try:
+        vote = utils.create_vote(db, vote, client_hash)
+        pusher_client.trigger("cache-recent-votes", "vote-event", {"datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"), "pizza_id": vote.pizza_id})
+        return vote
+    except IntegrityError as e:
+        raise HTTPException(status_code=400, detail="Can only vote once")
+
 
 # fastapi
 app = FastAPI()
