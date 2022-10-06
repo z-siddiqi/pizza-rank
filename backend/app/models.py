@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, UniqueConstraint
 from sqlalchemy.types import TypeDecorator, CHAR
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
@@ -52,7 +52,10 @@ class GUID(TypeDecorator):
 
 class Vote(Base):
     __tablename__ = "votes"
+    __table_args__ = (
+        UniqueConstraint("user_id", "pizza_id"),
+    )
 
     id = Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String, unique=True)
+    user_id = Column(String)
     pizza_id = Column(String, index=True)
