@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pizza Rank</title>
-    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-    <script>
-      var pusher = new Pusher("cdf94b4a20c19f28d667", {
-        cluster: "eu",
-      });
 
-      var channel = pusher.subscribe("my-channel");
-      
-      channel.bind("my-event", function (data) {
-        alert(JSON.stringify(data));
-      });
-    </script>
-  </head>
-  <body>
-    Pizza Rank
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pizza Rank</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+</head>
+
+<body>
+  <div class="flex flex-col h-screen">
+    <nav class="flex flex-row justify-between items-center w-full border-b p-7 mb-7">
+      <div>
+        <a href="#" class="text-xl no-underline text-gray-400 hover:text-orange-500">Pizza Rank</a>
+      </div>
+    </nav>
+    <div class="container mx-auto mb-auto lg:px-36">
+      <div class="grid grid-cols-3 gap-4">
+        <div class="col-span-3 order-2 lg:col-span-2 lg:order-1" id="pizzas">
+        </div>
+        <div class="col-span-3 order-1 lg:col-span-1 lg:order-2" id="latestVotes">
+        </div>
+      </div>
+    </div>
+    <footer class="h-10">
+      <div class="text-center text-gray-400 py-2">
+        Made by <a href="https://github.com/z-siddiqi" class="font-bold hover:text-orange-500">Zainuddin Siddiqi</a>
+      </div>
+    </footer>
+  </div>
+</body>
+
 </html>
