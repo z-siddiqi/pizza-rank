@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 import pusher
 
 import utils, models, schemas
@@ -9,7 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.exc import IntegrityError
 from pydantic import BaseSettings
-from fastapi import Depends, Request, HTTPException, APIRouter, FastAPI
+from fastapi import Depends, Header, Request, HTTPException, APIRouter, FastAPI
 from fastapi.routing import APIRoute
 
 # settings
@@ -84,10 +85,39 @@ def post_vote(request: Request, vote: schemas.VoteCreate, db: Session = Depends(
 
     try:
         vote = utils.create_vote(db, vote, client_hash)
-        pusher_client.trigger("cache-recent-votes", "vote-event", {"datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"), "pizza_id": vote.pizza_id})
+        pusher_client.trigger(
+            "cache-recent-votes",
+            "vote-event",
+            {
+                "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+                "pizza_id": vote.pizza_id,
+            },
+        )
         return vote
     except IntegrityError as e:
         raise HTTPException(status_code=400, detail="Can only vote once")
+
+
+@router.post("/cache-miss", status_code=204)
+async def cache_miss(request: Request, x_pusher_signature: str = Header(None), db: Session = Depends(get_db)):
+    if x_pusher_signature:
+        raw_input = await request.body()
+        input_hmac = hmac.new(key=settings.pusher_secret.encode(), msg=raw_input, digestmod="sha256")
+
+        if not hmac.compare_digest(input_hmac.hexdigest(), x_pusher_signature):
+            raise HTTPException(status_code=400, detail="Invalid message signature")
+
+        latest_vote = utils.get_latest_vote(db)
+        pusher_client.trigger(
+            "cache-recent-votes",
+            "vote-event",
+            {
+                "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+                "pizza_id": latest_vote.pizza_id,
+            },
+        )
+    else:
+        raise HTTPException(status_code=400, detail="Missing header '[X-Pusher-Signature]'")
 
 
 # fastapi

@@ -8,6 +8,11 @@ def get_votes(db: Session):
     return db.query(models.Vote.pizza_id, func.count(models.Vote.id).label("votes")).group_by(models.Vote.pizza_id).all()
 
 
+def get_latest_vote(db: Session):
+    db_vote = db.query(models.Vote).first()
+    return schemas.Vote(id=db_vote.id, pizza_id=db_vote.pizza_id)
+
+
 def create_vote(db: Session, vote: schemas.VoteCreate, user_id: str):
     db_vote = models.Vote(**vote.dict(), user_id=user_id)
     db.add(db_vote)
