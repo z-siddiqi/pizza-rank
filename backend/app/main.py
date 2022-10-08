@@ -79,21 +79,21 @@ def get_votes(db: Session = Depends(get_db)):
     return utils.get_votes(db)
 
 
-@router.post("/votes", response_model=schemas.Vote)
+@router.post("/votes", response_model=schemas.VoteDetail)
 def post_vote(request: Request, vote: schemas.VoteCreate, db: Session = Depends(get_db)):
     client_hash = request.headers.get("x-client-hash")
 
     try:
-        vote = utils.create_vote(db, vote, client_hash)
+        obj = utils.create_vote(db, vote, client_hash)
         pusher_client.trigger(
             "cache-recent-votes",
             "vote-event",
             {
-                "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-                "pizza_id": vote.pizza_id,
+                "created_at": obj.created_at.isoformat(),
+                "pizza_id": obj.pizza_id,
             },
         )
-        return vote
+        return schemas.VoteDetail(id=obj.id, pizza_id=obj.pizza_id, created_at=obj.created_at)
     except IntegrityError as e:
         raise HTTPException(status_code=400, detail="Can only vote once")
 
@@ -107,15 +107,17 @@ async def cache_miss(request: Request, x_pusher_signature: str = Header(None), d
         if not hmac.compare_digest(input_hmac.hexdigest(), x_pusher_signature):
             raise HTTPException(status_code=400, detail="Invalid message signature")
 
-        latest_vote = utils.get_latest_vote(db)
-        pusher_client.trigger(
-            "cache-recent-votes",
-            "vote-event",
-            {
-                "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-                "pizza_id": latest_vote.pizza_id,
-            },
-        )
+        obj = utils.get_latest_vote(db)
+
+        if obj:
+            pusher_client.trigger(
+                "cache-recent-votes",
+                "vote-event",
+                {
+                    "created_at": obj.created_at.isoformat(),
+                    "pizza_id": obj.pizza_id,
+                },
+            )
     else:
         raise HTTPException(status_code=400, detail="Missing header '[X-Pusher-Signature]'")
 

@@ -9,8 +9,7 @@ def get_votes(db: Session):
 
 
 def get_latest_vote(db: Session):
-    db_vote = db.query(models.Vote).first()
-    return schemas.Vote(id=db_vote.id, pizza_id=db_vote.pizza_id)
+    return db.query(models.Vote).first()
 
 
 def create_vote(db: Session, vote: schemas.VoteCreate, user_id: str):
@@ -18,4 +17,4 @@ def create_vote(db: Session, vote: schemas.VoteCreate, user_id: str):
     db.add(db_vote)
     db.commit()
     db.refresh(db_vote)
-    return schemas.Vote(id=db_vote.id, pizza_id=db_vote.pizza_id)
+    return db_vote
