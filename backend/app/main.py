@@ -4,7 +4,6 @@ import pusher
 
 import utils, models, schemas
 
-from datetime import datetime
 from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
@@ -12,6 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from pydantic import BaseSettings
 from fastapi import Depends, Header, Request, HTTPException, APIRouter, FastAPI
 from fastapi.routing import APIRoute
+from fastapi.middleware.cors import CORSMiddleware
 
 # settings
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -71,7 +71,7 @@ class ContextIncludedRoute(APIRoute):
         return custom_route_handler
 
 
-router = APIRouter(route_class=ContextIncludedRoute)
+router = APIRouter(prefix="/api/v1", route_class=ContextIncludedRoute)
 
 
 @router.get("/votes", response_model=list[schemas.AggregateVotes])
@@ -124,4 +124,11 @@ async def cache_miss(request: Request, x_pusher_signature: str = Header(None), d
 
 # fastapi
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:8080", "https://pizza-rank.zainuddinsiddiqi.com"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(router)
