@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # settings
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
-SQLALCHEMY_DATABASE_URL = "sqlite:///../pizza_rank.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///pizza_rank.db"
 
 
 class Settings(BaseSettings):
