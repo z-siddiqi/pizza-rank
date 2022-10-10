@@ -317,14 +317,12 @@ window.addEventListener("load", () => {
 
     app.latestVoteTemplate = function (createdAt, pizza) {
         return `
-            <div class="text-left mx-4">
-                <h1 class="font-bold">
-                    ${pizza.name}
-                </h1>
-                <p class="text-gray-400">
-                    ${dayjs(createdAt).utc('z').fromNow()}
-                </p>
-            </div>
+            <h1 class="font-bold">
+                ${pizza.name}
+            </h1>
+            <p class="text-gray-400">
+                ${dayjs(createdAt).utc('z').fromNow()}
+            </p>
         `;
     };
 
@@ -379,24 +377,31 @@ window.addEventListener("load", () => {
 
     var channel = pusher.subscribe("cache-recent-votes");
 
+    var firstTime = true;
+
     channel.bind("vote-event", function (vote) {
-        // update data
-        const nextData = app.data.map((pizza) => pizza.id === vote.pizza_id ? { ...pizza, votes: pizza.votes + 1 } : pizza);  // BUG: This shouldn't be done on page load because it adds one extra vote to the latest votes pizza
-        app.data = nextData;
-
-        // render vote count
-        const pizza = app.data.find((pizza) => pizza.id === vote.pizza_id);
-        const pizzaDiv = document.querySelector(`[data-pizza="${pizza.id}"]`);
-        pizzaDiv.querySelector("#votes").innerText = pizza.votes;
-
         // render latest vote
+        const pizza = app.data.find((pizza) => pizza.id === vote.pizza_id);
         const tempDiv = document.createElement('div');
-        tempDiv.className = "flex mx-auto p-2";
+        tempDiv.className = "px-3 my-2";
         tempDiv.innerHTML = app.latestVoteTemplate(vote.created_at, pizza);
-        app.latestVotes.insertAdjacentElement('afterbegin', tempDiv);
+        app.latestVotes.firstElementChild.insertAdjacentElement('afterend', tempDiv);
         if (app.latestVotes.childElementCount > 4) {
             app.latestVotes.removeChild(app.latestVotes.lastChild);
         }
+
+        if (!firstTime) {
+            // update data
+            const nextData = app.data.map((pizza) => pizza.id === vote.pizza_id ? { ...pizza, votes: pizza.votes + 1 } : pizza);
+            app.data = nextData;
+
+            // render vote count
+            const votesDiv = document.querySelector(`[data-pizza="${pizza.id}"] #votes`);
+            const votes = parseInt(votesDiv.innerText) + 1;
+            votesDiv.innerText = votes;
+        }
+
+        firstTime = false;
     });
 
     app.setup();
