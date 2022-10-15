@@ -9,7 +9,7 @@ def get_votes(db: Session):
 
 
 def get_latest_vote(db: Session):
-    return db.query(models.Vote).first()
+    return db.query(models.Vote).order_by(models.Vote.created_at.desc()).first()
 
 
 def create_vote(db: Session, vote: schemas.VoteCreate, user_id: str):
