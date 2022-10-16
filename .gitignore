@@ -8,4 +8,10 @@ __pycache__/
 .venv
 
 # vsc folder 
-.vscode/*
+.vscode/
+
+# packages
+node_modules/
+
+# build folder
+build/
