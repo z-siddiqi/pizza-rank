@@ -1,0 +1,17 @@
+{
+  "name": "pizza-rank",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "postcss src/css/tailwind.css -o public/build/tailwind.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/z-siddiqi/pizza-rank.git"
+  },
+  "author": "Zainuddin Siddiqi",
+  "license": "ISC",
+  "homepage": "https://github.com/z-siddiqi/pizza-rank#readme"
+}
