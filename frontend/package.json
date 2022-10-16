@@ -13,5 +13,11 @@
   },
   "author": "Zainuddin Siddiqi",
   "license": "ISC",
-  "homepage": "https://github.com/z-siddiqi/pizza-rank#readme"
+  "homepage": "https://github.com/z-siddiqi/pizza-rank#readme",
+  "dependencies": {
+    "autoprefixer": "^10.4.12",
+    "postcss": "^8.4.18",
+    "postcss-cli": "^10.0.0",
+    "tailwindcss": "^3.1.8"
+  }
 }
