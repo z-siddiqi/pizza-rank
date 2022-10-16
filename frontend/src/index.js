@@ -1,7 +1,12 @@
-window.addEventListener("load", () => {
-    dayjs.extend(window.dayjs_plugin_utc)
-    dayjs.extend(window.dayjs_plugin_relativeTime)
+import Pusher from 'pusher-js';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import relativeTime from "dayjs/plugin/relativeTime";
 
+dayjs.extend(utc);
+dayjs.extend(relativeTime);
+
+window.addEventListener("load", () => {
     var app = {
         pizzas: document.querySelector("#pizzas"),
         latestVotes: document.querySelector("#latestVotes"),
