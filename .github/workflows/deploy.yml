@@ -25,5 +25,7 @@ jobs:
           SSH_HOST: '${{secrets.SSH_HOST}}'
       - name: Pull the source
         run: ssh production 'cd pizza-rank && git fetch && git reset --hard origin/main'
+      - name: Build project
+        run: ssh production 'cd pizza-rank/backend && chmod +x build.sh && ./build.sh'
       - name: Restart the server
         run: ssh production 'sudo systemctl restart pizza-rank'
