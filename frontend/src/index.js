@@ -15,105 +15,105 @@ window.addEventListener("load", () => {
                 "id": "65ca9f2e-23bb-4e7e-9ef2-adb92a3b8021",
                 "name": "Spinach & Feta",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "c871d296-c6a3-4879-8de1-d5b63e6db356",
                 "name": "Wisconsin 6 Cheese",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "fbd2523e-8853-4a4d-864b-19f98d981e52",
                 "name": "Honolulu Hawaiian",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "5a89a04a-83ec-491a-881c-d90e374eee6d",
                 "name": "Philly Cheese Steak",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "a641e3be-a028-47cc-9c3f-847ef89d6fac",
                 "name": "Pacific Veggie",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "48e336e4-ba09-4a99-91bf-d467fb08bdf1",
                 "name": "Cali Chicken Bacon Ranch\u2122",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "080673ce-3a8d-490d-98ce-8946a054446c",
                 "name": "Fiery Hawaiian\u2122",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "d1edaf57-f0e3-4314-8090-74b16d60c2fc",
                 "name": "Buffalo Chicken",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "e18d72f2-5ddf-4893-87de-93932404f2b4",
                 "name": "Memphis BBQ Chicken",
                 "category": "Specialty Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "4b3c08d0-a332-4de5-9186-b8dac92196f8",
                 "name": "America's Favorite Feast\u00ae",
                 "category": "Feast Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "8e9140b9-7499-4c4d-8a3a-e23be4e10915",
                 "name": "Bacon Cheeseburger Feast\u00ae",
                 "category": "Feast Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "e6c55418-010c-46b0-b253-b24cd19fc494",
                 "name": "Deluxe Feast\u00ae",
                 "category": "Feast Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "622b63f8-75f0-4c7f-848b-3a8858d42561",
                 "name": "ExtravaganZZa Feast\u00ae",
                 "category": "Feast Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "eb04dd74-98fd-4838-9437-7155bb6eb2ed",
                 "name": "MeatZZa Feast\u00ae",
                 "category": "Feast Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
                 "id": "cc54f77f-0002-4c14-839a-3f18785330e2",
                 "name": "Ultimate Pepperoni Feast\u2122",
                 "category": "Feast Pizzas",
-                "company": "Domino's Pizza",
+                "company": "Domino's",
                 "votes": 0
             },
             {
@@ -297,7 +297,7 @@ window.addEventListener("load", () => {
     app.pizzaTemplate = function (pizza) {
         return `
             <div class="grow">
-                <img src="https://logo.clearbit.com/${pizza.company.replaceAll(/[^a-zA-Z]+/g, '').toLowerCase()}.com" class="w-full" />
+                <img src="https://logo.clearbit.com/${pizza.company.replaceAll(/[^a-zA-Z]+/g, '').toLowerCase()}.co.uk" class="w-full" />
             </div>
             <div class="w-5/6 text-left mx-6 pt-2">
                 <h1 class="font-bold mb-2 lg:text-lg">
